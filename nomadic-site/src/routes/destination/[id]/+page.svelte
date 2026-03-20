@@ -11,7 +11,7 @@
   let error = '';
   let activeTab = 'scores';
   
-  const API = 'http://localhost:3000';
+  import { API } from '$lib';
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   
   onMount(async () => {

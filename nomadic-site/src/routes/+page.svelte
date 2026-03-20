@@ -12,7 +12,7 @@
   let loadingDomains = $state(false);
   let loadingVisas = $state(false);
   
-  const API = 'http://localhost:3000';
+  import { API } from '$lib';
   
   let user = $derived($auth.user);
   let token = $derived($auth.token);

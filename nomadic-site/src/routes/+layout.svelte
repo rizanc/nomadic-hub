@@ -15,7 +15,7 @@
   let authError = $state('');
   let authLoading = $state(false);
   
-  const API = 'http://localhost:3000';
+  import { API } from '$lib';
   
   let user = $derived($auth.user);
   

@@ -6,7 +6,7 @@
   let loading = true;
   let error = '';
   
-  const API = 'http://localhost:3000';
+  import { API } from '$lib';
   
   onMount(async () => {
     const id = $page.params.id;

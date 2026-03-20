@@ -2405,13 +2405,17 @@ async fn global_search(Query(params): Query<SearchQuery>, State(state): State<Db
 // ============== MAIN ==============
 #[tokio::main]
 async fn main() {
-    let mut db_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    db_path.push("nomadic.db");
-    
+    let db_path = std::env::var("DATABASE_PATH")
+        .unwrap_or_else(|_| {
+            let mut p = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+            p.push("nomadic.db");
+            p.to_string_lossy().into_owned()
+        });
+
     let conn = Connection::open(&db_path).expect("Failed to open database");
     init_db(&conn).expect("Failed to initialize database");
-    
-    println!("📦 Database initialized at {:?}", db_path);
+
+    println!("📦 Database initialized at {}", db_path);
     
     let state = DbState {
         db: Mutex::new(conn),
@@ -2475,9 +2479,10 @@ async fn main() {
         .layer(cors)
         .with_state(state);
     
-    let addr = "0.0.0.0:3000";
+    let port = std::env::var("PORT").unwrap_or_else(|_| "3000".to_string());
+    let addr = format!("0.0.0.0:{}", port);
     println!("🚀 Server running on http://{}", addr);
-    
-    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+
+    let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }

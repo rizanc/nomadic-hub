@@ -11,7 +11,7 @@ interface User {
   created_at: string;
 }
 
-const API = 'http://localhost:3000';
+import { API } from '$lib';
 
 function createAuthStore() {
   const { subscribe, set, update } = writable<{

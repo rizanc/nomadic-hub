@@ -3,7 +3,7 @@
   import { auth } from '$lib/auth';
   import { goto } from '$app/navigation';
   
-  const API = 'http://localhost:3000';
+  import { API } from '$lib';
   
   let friends: any[] = $state([]);
   let requests: any[] = $state([]);

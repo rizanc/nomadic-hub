@@ -6,7 +6,7 @@
   let searching = false;
   let showResults = false;
   
-  const API = 'http://localhost:3000';
+  import { API } from '$lib';
   
   async function search() {
     if (!searchQuery.trim()) {
