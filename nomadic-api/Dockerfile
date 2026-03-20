@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/
 WORKDIR /app
 COPY --from=builder /app/target/release/nomadic-api .
 
-ENV DATABASE_PATH=/app/data/nomadic.db
+ENV DATABASE_PATH=/app/nomadic.db
 
 EXPOSE 3000
 
