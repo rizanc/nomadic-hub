@@ -124,7 +124,7 @@
       <p>Find your next base. Sorted by nomad score.</p>
       
       <div class="destinations-grid">
-        {#each destinations.sort((a,b) => b.nomad_score - a.nomad_score) as city}
+        {#each [...destinations].sort((a,b) => b.nomad_score - a.nomad_score) as city}
           <a href="/destination/{city.id}" class="destination-card">
             <div class="city-image">
               <img src={city.image} alt={city.name} />

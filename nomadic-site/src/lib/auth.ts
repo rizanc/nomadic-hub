@@ -61,13 +61,12 @@ function createAuthStore() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, first_name: firstName, last_name: lastName })
       });
-      
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || 'Registration failed');
-      }
-      
-      const data = await res.json();
+
+      const text = await res.text();
+      let data: any;
+      try { data = JSON.parse(text); } catch { throw new Error(text || 'Registration failed'); }
+      if (!data.token) throw new Error(data.error || text || 'Registration failed');
+
       localStorage.setItem('nomadic_token', data.token);
       set({ user: data.user, token: data.token, loading: false });
       return data;
@@ -79,12 +78,12 @@ function createAuthStore() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-      
-      if (!res.ok) {
-        throw new Error('Invalid email or password');
-      }
-      
-      const data = await res.json();
+
+      const text = await res.text();
+      let data: any;
+      try { data = JSON.parse(text); } catch { throw new Error(text || 'Invalid email or password'); }
+      if (!data.token) throw new Error(data.error || text || 'Invalid email or password');
+
       localStorage.setItem('nomadic_token', data.token);
       set({ user: data.user, token: data.token, loading: false });
       return data;
