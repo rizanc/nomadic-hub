@@ -42,9 +42,21 @@
     blogPosts = posts;
   }
   
+  function updateTabFromHash() {
+    const hash = window.location.hash.slice(1);
+    if (['destinations', 'visas', 'blog', 'domains'].includes(hash)) {
+      activeTab = hash;
+    } else {
+      activeTab = 'home';
+    }
+  }
+
   onMount(() => {
+    updateTabFromHash();
+    window.addEventListener('hashchange', updateTabFromHash);
     searchVisas();
     loadData();
+    return () => window.removeEventListener('hashchange', updateTabFromHash);
   });
 </script>
 
@@ -154,12 +166,12 @@
               <div class="visa-header">
                 <span class="flag">{visa.flag}</span>
                 <h3>{visa.country}</h3>
-                {#if visa.nomadVisa}
+                {#if visa.nomad_visa}
                   <span class="badge">Nomad Visa</span>
                 {/if}
               </div>
               <div class="visa-details">
-                <p><strong>Max stay:</strong> {visa.maxStay}</p>
+                <p><strong>Max stay:</strong> {visa.max_stay}</p>
                 <p><strong>Income:</strong> {visa.income}</p>
                 <p><strong>Tax:</strong> {visa.tax}</p>
               </div>
@@ -182,7 +194,7 @@
             <p>{post.excerpt}</p>
             <div class="meta">
               <span>{post.date}</span>
-              <span>{post.readTime} min read</span>
+              <span>{post.read_time} min read</span>
             </div>
           </article>
         {/each}
