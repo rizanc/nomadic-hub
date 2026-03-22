@@ -17,20 +17,21 @@
   onMount(async () => {
     const id = $page.params.id;
     try {
-      const [destRes, weatherRes, prosRes, consRes, reviewsRes] = await Promise.all([
-        fetch(`${API}/api/destinations/${id}`),
+      const destRes = await fetch(`${API}/api/destinations/${id}`);
+      if (!destRes.ok) throw new Error('Destination not found');
+      destination = await destRes.json();
+
+      const [weatherRes, prosRes, consRes, reviewsRes] = await Promise.all([
         fetch(`${API}/api/destinations/${id}/weather/live`),
         fetch(`${API}/api/destinations/${id}/pros`),
         fetch(`${API}/api/destinations/${id}/cons`),
         fetch(`${API}/api/destinations/${id}/reviews`)
       ]);
-      
-      if (!destRes.ok) throw new Error('Destination not found');
-      destination = await destRes.json();
-      weather = await weatherRes.json();
-      pros = await prosRes.json();
-      cons = await consRes.json();
-      reviews = await reviewsRes.json();
+
+      if (weatherRes.ok) weather = await weatherRes.json();
+      if (prosRes.ok) pros = await prosRes.json();
+      if (consRes.ok) cons = await consRes.json();
+      if (reviewsRes.ok) reviews = await reviewsRes.json();
     } catch (e) {
       error = 'Failed to load destination';
     } finally {
