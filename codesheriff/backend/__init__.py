@@ -1,1 +1,0 @@
-"""CodeSheriff backend package."""
