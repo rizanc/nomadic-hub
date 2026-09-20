@@ -79,8 +79,8 @@ Environment variables (both optional):
 |----------|---------|---------|
 | `DATABASE_PATH` | `nomadic.db` next to `Cargo.toml` | SQLite file; created and seeded if missing |
 | `PORT` | `3000` | Listen port |
+| `JWT_SECRET` | dev-only default | Signing key for user tokens; set it in production (`fly secrets set JWT_SECRET=...`) |
 
-The JWT signing key is a constant in `main.rs`, not an environment variable. Change it before exposing the API to anyone.
 
 ### Site
 

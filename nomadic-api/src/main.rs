@@ -17,7 +17,13 @@ use rand::Rng;
 use chrono::Utc;
 
 // ============== CONFIG ==============
-const JWT_SECRET: &str = "nomadic-super-secret-key-change-in-production";
+// Signing key for JWTs. Set JWT_SECRET in the environment (fly secrets set JWT_SECRET=...);
+// the fallback exists only so `cargo run` works locally without configuration.
+fn jwt_secret() -> Vec<u8> {
+    std::env::var("JWT_SECRET")
+        .unwrap_or_else(|_| "nomadic-dev-only-secret".to_string())
+        .into_bytes()
+}
 const JWT_EXPIRY_HOURS: i64 = 24 * 30; // 30 days
 
 // ============== DATA STRUCTURES ==============
@@ -873,11 +879,11 @@ fn create_token(user_id: i64, email: &str) -> String {
         email: email.to_string(),
         exp,
     };
-    encode(&Header::default(), &claims, &EncodingKey::from_secret(JWT_SECRET.as_bytes())).unwrap()
+    encode(&Header::default(), &claims, &EncodingKey::from_secret(&jwt_secret())).unwrap()
 }
 
 fn validate_token(token: &str) -> Option<Claims> {
-    match decode::<Claims>(token, &DecodingKey::from_secret(JWT_SECRET.as_bytes()), &Validation::default()) {
+    match decode::<Claims>(token, &DecodingKey::from_secret(&jwt_secret()), &Validation::default()) {
         Ok(data) => Some(data.claims),
         Err(_) => None,
     }
